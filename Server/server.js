@@ -13,11 +13,11 @@ const server = http.createServer(app);
 
 // Initialize Socket.IO server
 export const io = new Server(server, {
-  cors: {
-    origin: true,
-    credentials: true
-  },
-  transports: ["polling"]   // 🔥 CRITICAL
+    cors: {
+        origin: true,
+        credentials: true
+    },
+    transports: ["polling"]   // 🔥 CRITICAL
 });
 
 // Store online users
@@ -40,10 +40,20 @@ io.on("connection", (socket) => {
 })
 
 // Middleware Setup
-app.use(cors({
-  origin: true,
-  credentials: true
-}));
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+    res.setHeader(
+        "Access-Control-Allow-Headers",
+        "Content-Type, Authorization, token"
+    );
+
+    if (req.method === "OPTIONS") {
+        return res.status(200).end();
+    }
+
+    next();
+});
 
 app.use(express.json({ limit: "4mb" }));
 
