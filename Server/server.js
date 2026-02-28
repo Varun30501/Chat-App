@@ -13,10 +13,11 @@ const server = http.createServer(app);
 
 // Initialize Socket.IO server
 export const io = new Server(server, {
-    cors: {
-        origin: "*"
-    },
-    transports: ["polling"],
+  cors: {
+    origin: true,
+    credentials: true
+  },
+  transports: ["polling"]   // 🔥 CRITICAL
 });
 
 // Store online users
@@ -39,8 +40,14 @@ io.on("connection", (socket) => {
 })
 
 // Middleware Setup
-app.use(express.json({ limit: "4mb" })); // Parse JSON bodies with a size limit
-app.use(cors());
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
+
+app.options("*", cors());
+
+app.use(express.json({ limit: "4mb" }));
 
 // Routes Setup
 app.use("/api/status", (req, res) => res.send("Server is live"));
