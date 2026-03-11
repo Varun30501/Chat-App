@@ -80,6 +80,25 @@ const ResetPassword = () => {
 
     };
 
+    const handlePaste = (e) => {
+
+        const paste = e.clipboardData.getData("text").trim()
+
+        if (!/^\d{6}$/.test(paste)) return
+
+        const pasteArray = paste.split("")
+
+        setOtp(pasteArray)
+
+        pasteArray.forEach((digit, index) => {
+            const input = document.getElementById(`otp-${index}`)
+            if (input) input.value = digit
+        })
+
+        document.getElementById("otp-5")?.focus()
+
+    }
+
     return (
 
         <div className="min-h-screen bg-cover bg-center flex items-center
@@ -107,7 +126,7 @@ const ResetPassword = () => {
         focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
 
-                <div className="flex gap-2 justify-center">
+                <div className="flex gap-2 justify-center" onPaste={handlePaste}>
 
                     {otp.map((digit, index) => (
                         <input
